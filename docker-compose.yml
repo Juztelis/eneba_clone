@@ -1,5 +1,9 @@
 # Database only. Run the PHP API and the Vite dev server on the host (see README).
 services:
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
   db:
     image: postgres:16
     environment:
