@@ -18,13 +18,5 @@
         "service": "keyhub"
       }
     }
-  ],
-  "bindings": [
-    {
-      "type": "service",
-      "service": "frontend",
-      "format": "url",
-      "env": "FRONTEND_URL"
-    }
   ]
 }
