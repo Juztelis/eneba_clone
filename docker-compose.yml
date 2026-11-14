@@ -1,0 +1,14 @@
+# Database only. Run the PHP API and the Vite dev server on the host (see README).
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: keystore
+      POSTGRES_USER: keystore
+      POSTGRES_PASSWORD: keystore
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro   # applied on first start
+volumes:
+  pgdata:
