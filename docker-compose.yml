@@ -1,10 +1,30 @@
 # Database only. Run the PHP API and the Vite dev server on the host (see README).
-services:
-  web:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-  db:
+# services:
+#   web:
+#     build:
+#       context: .
+#       dockerfile: ./Dockerfile
+#   db:
+#     image: postgres:16
+#     environment:
+#       POSTGRES_DB: keystore
+#       POSTGRES_USER: keystore
+#       POSTGRES_PASSWORD: keystore
+#     ports: ["5432:5432"]
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+#       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro   # applied on first start
+# volumes:
+#   pgdata:
+
+# Exported from Render on 2026-11-14T22:03:55Z
+version: "1"
+projects:
+  - name: My project
+    environments:
+      - name: Production
+        services:
+          db:
     image: postgres:16
     environment:
       POSTGRES_DB: keystore
@@ -13,6 +33,32 @@ services:
     ports: ["5432:5432"]
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro   # applied on first start
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro # applied on first start
 volumes:
   pgdata:
+    - type: web
+      name: eneba_clone
+      runtime: docker
+      repo: https://github.com/Juztelis/eneba_clone
+      plan: free
+      envVars:
+        - key: CORS_ORIGINS
+          sync: false
+        - key: APP_KEY
+          sync: false
+        - key: JWT_SECRET
+          sync: false
+        - key: DB_PASS
+          sync: false
+        - key: DB_USER
+          sync: false
+        - key: DB_NAME
+          sync: false
+        - key: DB_PORT
+          sync: false
+        - key: DB_HOST
+          sync: false
+      region: frankfurt
+      dockerContext: .
+      dockerfilePath: ./Dockerfile
+      autoDeployTrigger: commit
