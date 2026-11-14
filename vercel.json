@@ -1,0 +1,30 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "keyhub": {
+      "root": ".",
+      "framework": "container",
+      "runtime": "container"
+    },
+    "frontend": {
+      "root": "frontend",
+      "framework": "vite"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "keyhub"
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "type": "service",
+      "service": "frontend",
+      "format": "url",
+      "env": "FRONTEND_URL"
+    }
+  ]
+}

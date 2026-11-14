@@ -24,41 +24,29 @@ projects:
     environments:
       - name: Production
         services:
-          db:
-    image: postgres:16
-    environment:
-      POSTGRES_DB: keystore
-      POSTGRES_USER: keystore
-      POSTGRES_PASSWORD: keystore
-    ports: ["5432:5432"]
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro # applied on first start
-volumes:
-  pgdata:
-    - type: web
-      name: eneba_clone
-      runtime: docker
-      repo: https://github.com/Juztelis/eneba_clone
-      plan: free
-      envVars:
-        - key: CORS_ORIGINS
-          sync: false
-        - key: APP_KEY
-          sync: false
-        - key: JWT_SECRET
-          sync: false
-        - key: DB_PASS
-          sync: false
-        - key: DB_USER
-          sync: false
-        - key: DB_NAME
-          sync: false
-        - key: DB_PORT
-          sync: false
-        - key: DB_HOST
-          sync: false
-      region: frankfurt
-      dockerContext: .
-      dockerfilePath: ./Dockerfile
-      autoDeployTrigger: commit
+          - type: web
+            name: eneba_clone
+            runtime: docker
+            repo: https://github.com/Juztelis/eneba_clone
+            plan: free
+            envVars:
+              - key: CORS_ORIGINS
+                sync: false
+              - key: APP_KEY
+                sync: false
+              - key: JWT_SECRET
+                sync: false
+              - key: DB_PASS
+                sync: false
+              - key: DB_USER
+                sync: false
+              - key: DB_NAME
+                sync: false
+              - key: DB_PORT
+                sync: false
+              - key: DB_HOST
+                sync: false
+            region: frankfurt
+            dockerContext: .
+            dockerfilePath: ./Dockerfile
+            autoDeployTrigger: commit
