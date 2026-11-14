@@ -11,8 +11,9 @@ final class Db
     public static function pdo(): PDO
     {
         if (self::$pdo === null) {
-            $dsn = sprintf('pgsql:host=%s;port=%s;dbname=%s',
-                Config::get('DB_HOST', '127.0.0.1'), Config::get('DB_PORT', '5432'), Config::get('DB_NAME', 'keystore'));
+            $dsn = sprintf('pgsql:host=%s;port=%s;dbname=%s;sslmode=%s',
+                Config::get('DB_HOST', '127.0.0.1'), Config::get('DB_PORT', '5432'), Config::get('DB_NAME', 'keystore'),
+                Config::get('DB_SSLMODE', 'prefer'));
             self::$pdo = new PDO($dsn, Config::get('DB_USER', 'keystore'), Config::get('DB_PASS', 'keystore'), [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

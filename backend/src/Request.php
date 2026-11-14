@@ -32,7 +32,8 @@ final class Request
 
     public function bearer(): ?string
     {
-        $h = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
+        $h = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
+            ?? (function_exists('getallheaders') ? (getallheaders()['Authorization'] ?? '') : '');
         return preg_match('/^Bearer\s+(\S+)$/i', $h, $m) ? $m[1] : null;
     }
 }

@@ -29,6 +29,29 @@ npm run dev                     # http://localhost:5173  (Vite proxies /api to :
 ```
 Test cards (simulated payment, no real money): `4242 4242 4242 4242` approves, `4000 0000 0000 0002` is declined, `4000 0000 0000 9995` is "insufficient funds". Any future expiry and any CVC.
 
+## Deploy on Render (free plan)
+Render has no native PHP runtime, so the backend runs from the included `Dockerfile` (Apache + PHP). The same container also serves the built React app, so there is **one URL and no CORS**. `render.yaml` describes everything: one Docker web service and one Postgres database.
+
+1. Push the project to a GitHub repository (the `.gitignore` keeps `backend/.env` and `node_modules` out):
+   ```bash
+   git init && git add . && git commit -m "Keyhub"
+   git branch -M main
+   git remote add origin https://github.com/<you>/<repo>.git
+   git push -u origin main
+   ```
+2. Sign up at render.com (GitHub login is easiest) and open **New → Blueprint**.
+3. Connect the repository and click **Apply**. Render creates the database, wires its credentials into the web service, generates `JWT_SECRET` and `APP_KEY`, and builds the image (first build takes several minutes).
+4. Watch **Logs**. A healthy first start prints `Creating database schema...`, `Loading demo data...`, `Bootstrap complete.`. Then open the `https://<name>.onrender.com` URL shown on the service page.
+
+Every later `git push` redeploys automatically.
+
+Things to know about the free plan:
+* The web service sleeps after about 15 minutes without traffic; the first request afterwards takes up to a minute.
+* The free Postgres database **expires 30 days after creation** (then a 14-day grace period to upgrade before it is deleted), and only one free database is allowed per workspace.
+* The free plan has no shell, which is why `backend/bin/bootstrap.php` creates the schema and loads demo data on start (`AUTO_SEED=true`). Set `AUTO_SEED` to `false` in the Render dashboard once you have your own data; bootstrap never touches existing data either way.
+* **Never change `APP_KEY` after the first deploy.** Stored game keys are encrypted with it. If it does not match, bootstrap stops the deploy with a clear message instead of starting a shop that cannot deliver keys.
+* To connect to the database from your own machine, remove `ipAllowList: []` from `render.yaml` (or add your IP) and use `DB_SSLMODE=require`.
+
 ## How each requirement is met
 | Requirement | Where |
 |---|---|
